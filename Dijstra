@@ -1,0 +1,66 @@
+
+
+public class Dijstra
+{
+	public static void main(String[] args)
+	{
+		//输入邻接矩阵；
+		int[][] matrix = {{0,1,5,65535,65535,65535,65535,65535,65535},{1,0,3,7,5,65535,65535,65535,65535},
+				{5,3,0,65535,1,7,65535,65535,65535},{65535,7,65535,0,2,65535,3,65535,65535},
+				{65535,5,1,2,0,3,6,9,65535},{65535,65535,7,65535,3,0,65535,5,65535},
+				{65535,65535,65535,3,6,65535,0,2,7},{65535,65535,65535,65535,9,5,2,0,4},
+				{65535,65535,65535,65535,65535,65535,7,4,0}};
+		
+		//������ֱ���
+		int k = 0 ;
+		int min;
+		int MAXVEX = matrix.length;
+		int[] Final = new int[MAXVEX];  //数组元素为0或1的一维数组，1表示该位置已找到最短路；
+		int[] Distance = new int[MAXVEX];  //定义距离的一维数组，表示v0到该点的最短距离之和
+		int[] Previous = new int[MAXVEX];  //表示该点的前驱节点的下标；
+		
+		//初始化数据
+		for (int v1 = 0; v1 < MAXVEX; v1++)
+		{
+			Final[v1] = 0;
+			Distance[v1] = matrix[0][v1];
+			Previous[v1] = 0;
+		}
+		Final[0] = 1; //v0到v0之间不需要求路径；
+		Distance[0] = 0;  //v0到v0的路径为0；
+		
+		//进行主循环，每次求得v0到每个点的最短路径；
+		for (int i = 1; i < MAXVEX; i++)
+		{
+			min = 65535;  //初始min；
+			for (int j = 0; j < MAXVEX; j++)  //该循环找距离v0最短的那个节点；
+			{	
+				if (Final[j] == 0 && Distance[j] < min) //判断该点是否找到最短路径以及是否该路径比min小；
+				{
+					 k = j;
+					min = Distance[j];
+				}	
+			}
+			Final[k] = 1;  //找到距离v0最短的节点，在Final数组里赋予该节点为1表示已找到最短路；
+			for (int j = 0; j < MAXVEX; j++)  //该循环为修正当前最短路径及距离；
+			{
+				if ((Final[j] == 0 && (min+matrix[k][j]) < Distance[j]))
+				{
+					Distance[j] = min+matrix[k][j];
+					Previous[j] = k;
+				}
+			}
+		}
+		
+		//打印结果,第一行是Final数组，表示在该点是否找到最短路径；
+		//第二行是v0到各点的最短距离之和；第三行表示该点的前驱节点的下标；
+		for (int f : Final)
+			System.out.print(f+" ");
+		System.out.println("");
+		for (int d : Distance)
+			System.out.print(d+" ");
+		System.out.println("");
+		for (int p : Previous)
+			System.out.print(p+" ");
+	}
+}
